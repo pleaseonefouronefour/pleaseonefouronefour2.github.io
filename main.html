@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&display=swap" rel="stylesheet">
+    <title>Main site</title>
+    </head>
+
+<body>
+    <div class="audio-control" style="top: 12px; left: 12px; position: fixed; z-index: 1000;">
+        <button id="playPauseBtn" type="button">▶</button>
+        <label for="volumeRange" style="color: #d9f5ff;"></label>
+        <input id="volumeRange" type="range" min="0" max="1" step="0.05" value="0.6">
+    </div>
+
+    <div class="card">
+        <div class="left">
+            <img src="https://i.postimg.cc/NMwXv3DJ/pfpp.png" alt="pfp" class="pfp">
+            <div class="left-meta">
+                <span class="pain-label" id="pain">pain</span>
+                <p id="bio" class="bio-d" style=" font-family: 'Werebeast', 'Bebas Neue', sans-serif;;" data-text="misantrophy"></p>
+                <p style="opacity: 20%; margin-top: -11%; font-family: 'Werebeast', 'Bebas Neue', sans-serif;">joined 4 years ago</p>
+            </div>
+            <div class="bottom-row">
+
+                <div class="location">
+                    <i class="fas fa-map-marker-alt" style="margin-right: 8px;"></i> hell
+                </div>
+                <a href="https://t.me/steponjesus" target="_blank" class="tg">
+                    <i class="fab fa-telegram"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateViewCounter() {
+            var counter = document.getElementById('viewCounter');
+            var endpoint = 'https://api.countapi.xyz/hit/sample-site/visitor-counter';
+
+            if (!counter) {
+                return;
+            }
+
+            counter.textContent = 'Profile views: ...';
+
+            fetch(endpoint)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    if (data && typeof data.value === 'number') {
+                        counter.textContent = 'Profile views: ' + data.value;
+                        console.log('View counter loaded, current value:', data.value);
+                    } else {
+                        counter.textContent = 'Profile views: 0';
+                        console.log('View counter response missing value, got:', data);
+                    }
+                })
+                .catch(function (err) {
+                    counter.textContent = 'Profile views: offline';
+                    console.log('View counter API failed:', err);
+                });
+        }
+
+        window.addEventListener('load', function () {
+            updateViewCounter();
+
+            var bio = document.getElementById('bio');
+            var text = (bio.getAttribute('data-text') || '').trim();
+            var i = 0;
+            var removing = false;
+
+            function loop() {
+                if (removing) {
+                    i -= 1;
+                    bio.textContent = text.slice(0, i);
+                    if (i <= 0) {
+                        removing = false;
+                        setTimeout(loop, 400);
+                        return;
+                    }
+                    setTimeout(loop, 75);
+                } else {
+                    i += 1;
+                    bio.textContent = text.slice(0, i);
+                    if (i >= text.length) {
+                        removing = true;
+                        setTimeout(loop, 1100);
+                        return;
+                    }
+                    setTimeout(loop, 110);
+                }
+            }
+
+            bio.textContent = '';
+            loop();
+        });
+
+        var audio = new Audio('4hbyiv.mp3');
+        var playPauseBtn = document.getElementById('playPauseBtn');
+        var volumeRange = document.getElementById('volumeRange');
+
+        if (playPauseBtn && volumeRange) {
+            audio.loop = true;
+            audio.volume = 0.6;
+
+            function updateAudioButton() {
+                playPauseBtn.textContent = audio.paused ? '▶' : '⏸';
+            }
+
+            playPauseBtn.addEventListener('click', function () {
+                if (audio.paused) {
+                    audio.play().catch(function () {
+                        console.log('autoplay blocked');
+                    });
+                } else {
+                    audio.pause();
+                }
+                updateAudioButton();
+            });
+
+            volumeRange.addEventListener('input', function () {
+                audio.volume = Number(volumeRange.value);
+            });
+
+            updateAudioButton();
+        }
+        window.addEventListener('mousemove', function (event) {
+            var count = Math.floor(Math.random() * 3) + 2; 
+            for (var i = 0; i < count; i++) {
+                var offsetX = (Math.random() - 0.5) * 24;
+                var offsetY = (Math.random() - 0.5) * 24;
+                createSparkle(event.clientX + offsetX, event.clientY + offsetY);
+            }
+        });
+
+        function createSparkle(x, y) {
+            var sparkle = document.createElement('span');
+            sparkle.className = 'sparkle';
+            var size = Math.random() * 3 + 1; 
+            sparkle.style.width = size + 'px';
+            sparkle.style.height = size + 'px';
+            sparkle.style.left = x + 'px';
+            sparkle.style.top = y + 'px';
+
+            var life = Math.random() * 300 + 320; 
+            sparkle.style.animationDuration = life + 'ms';
+
+            document.body.appendChild(sparkle);
+
+            setTimeout(function () {
+                if (sparkle.parentNode) {
+                    sparkle.parentNode.removeChild(sparkle);
+                }
+            }, life + 60);
+        }
+
+       
+        window.addEventListener('load', function () {
+            var target = document.querySelector('.pain-label');
+            if (!target) return;
+
+            function emitPainSparkle() {
+                var rect = target.getBoundingClientRect();
+                var dot = document.createElement('span');
+                dot.className = 'pain-sparkle';
+
+                var offsetX = Math.random() * rect.width;
+                var offsetY = Math.random() * rect.height;
+                dot.style.left = rect.left + offsetX + 'px';
+                dot.style.top = rect.top + offsetY + 'px';
+                dot.style.width = dot.style.height = (Math.random() * 1.2 + 0.6) + 'px';
+                dot.style.opacity = '0.9';
+
+                document.body.appendChild(dot);
+
+                setTimeout(function () {
+                    if (dot.parentNode) dot.parentNode.removeChild(dot);
+                }, 550 + Math.random() * 210);
+            }
+
+           
+            setInterval(function () {
+                var count = Math.floor(Math.random() * 2) + 2; 
+                for (var i = 0; i < count; i++) {
+                    emitPainSparkle();
+                }
+            }, 90);
+        });
+    </script>
+</body>
+</html>

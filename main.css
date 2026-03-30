@@ -1,0 +1,51 @@
+body {
+    height: 100vh;
+    background: url('https://i.postimg.cc/hPnPwzQ3/r6p6ee-(1).gif') no-repeat center center/cover fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #f2f6fb;
+    cursor: default;
+    text-align: center;
+}
+
+
+* {
+    cursor: default !important;
+}
+
+#enter {
+            font-size: min(14vw, 140px);
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            text-transform: uppercase;
+            position: relative;
+            color: #ffffff;
+        }
+        #enter::after {
+            content: '|';
+            margin-left: 4px;
+            opacity: 1;
+            animation: blinkc 0.8s steps(2, start) infinite;
+            color: #ffffff;
+        }
+        @keyframes blinkc {
+            0%, 50% { opacity: 1; }
+            50.01%, 100% { opacity: 0; }
+        }
+        #enter:hover {
+            transform: scale(1.05);
+            transition: transform .2s ease;
+        }
+        .kkk {
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #a7e0ff;
+            font-size: 14px;
+            pointer-events: none;
+        }
